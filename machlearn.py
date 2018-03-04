@@ -1,5 +1,6 @@
-import data, knn, trees
-
+import data
+import knn
+import trees
 
 def knn_dating_test():
     xs, ys = data.create_dating_set()
@@ -34,28 +35,16 @@ def knn_digit_test():
     print(test_xs.shape[0])
     print(errors/test_xs.shape[0])
 
-#data, labels = data.create_bird_set()
-#print(labels)
 
-#print(data)
-#print(trees.calculate_entropy(data))
-#print(trees.calculate_entropy([0, 1]))
+def trees_lens_test():
+    matrix, labels = data.create_contacts_set()
 
-#print(trees.split(data, 0, 1))
-#print(trees.split(data, 0, 0))
+    lens_tree = trees.create_tree(matrix, labels)
 
-#print(trees.find_optimal_split_feature(data))
+    filename = "save_lens_tree.txt"
+    trees.save_tree(lens_tree, filename)
 
-#print(trees.get_majority([1, 1, 2, 3, 3, 3]))
+    print(trees.load_tree(filename))
 
-#tree = trees.create_tree(data, labels)
 
-#trees.save_tree(tree, "savetree.txt")
-#print(trees.load_tree("savetree.txt"))
-
-matrix, labels = data.create_contacts_set()
-lens_tree = trees.create_tree(matrix, labels)
-print(lens_tree)
-
-#print(trees.classify([1, 0], tree, labels))
-#print(trees.classify([1, 1], tree, labels))
+trees_lens_test()

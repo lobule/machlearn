@@ -4,15 +4,6 @@ from os import listdir
 
 import numpy as np
 
-#import matplotlib
-#import matplotlib.pyplot as plt
-#matplotlib.use('TkAgg')
-
-def create_data_set():
-    factors = array([[1.0, 1.1], [1.0, 1.0], [0, 0], [0, 0.1]])
-    labels = ['A', 'A', 'B', 'B']
-    return factors, labels
-
 
 def create_dating_set():
     reader = open("datingTestSet.txt")
@@ -67,16 +58,6 @@ def normalize_cols(matrix):
     normal_matrix = (matrix - tile(mins, (rows, 1))) / tile(ranges, (rows, 1))
 
     return normal_matrix, mins, ranges
-
-
-def plot(factors, labels):
-    rows = factors[:, 0]
-    cols = factors[:, 1]
-    codes = Categorical(labels).codes
-
-    #figure = plt.figure().add_subplot(111)
-    #figure.scatter(rows, cols, codes + 1, ['red' if c == 1 else 'green' if c == 2 else 'blue' for c in codes])
-    #plt.show()
 
 
 def create_bird_set():
