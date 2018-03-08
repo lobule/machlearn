@@ -3,6 +3,7 @@ import numpy
 import knn
 import trees
 import math
+import bayes
 
 
 class TestClassify(unittest.TestCase):
@@ -49,5 +50,13 @@ class TestClassify(unittest.TestCase):
 
         prediction = trees.classify([0, 0], tree, labels)
         self.failUnless(prediction == 'no')
+
+    def test_get_token_set(self):
+        corpus = [['this', 'is', 'not', 'a', 'test'],
+                  ['actually', 'this', 'is', 'a', 'test']]
+
+        vocabulary = bayes.get_token_set(corpus)
+        self.failUnless(set(vocabulary) == set(['this', 'is', 'not', 'actually', 'a', 'test']))
+        self.failUnless(len(vocabulary) == 6)
 
 
