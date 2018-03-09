@@ -59,4 +59,18 @@ class TestClassify(unittest.TestCase):
         self.failUnless(set(vocabulary) == set(['this', 'is', 'not', 'actually', 'a', 'test']))
         self.failUnless(len(vocabulary) == 6)
 
+    def test_get_vocabulary_vector(self):
+        vocabulary = 'these are the words'.split(' ')
+
+        sample = 'these are words'.split(' ')
+        self.failUnless(bayes.get_vocabulary_vector(vocabulary, sample) == [1, 1, 0, 1])
+
+        sample = 'these words may really be words'.split(' ')
+        self.failUnless(bayes.get_vocabulary_vector(vocabulary, sample) == [1, 0, 0, 1])
+
+        vocabulary = []
+        sample = 'edge case test'.split(' ')
+        self.failUnless(bayes.get_vocabulary_vector(vocabulary, sample) == [])
+
+
 
