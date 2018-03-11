@@ -1,6 +1,5 @@
 from numpy import *
-import operator
-
+import data
 
 def classify(new_xs, factors, labels, k):
     differences = tile(new_xs, (factors.shape[0], 1)) - factors
@@ -11,11 +10,5 @@ def classify(new_xs, factors, labels, k):
         ith_label = labels[distance_ranks[i]]
         tally[ith_label] = tally.get(ith_label, 0) + 1
 
-    max_count = -1
-    best_label = ""
-    for label, count in tally.items():
-        if count > max_count:
-            best_label = label
-            max_count = count
+    return data.get_most_common(tally)
 
-    return best_label

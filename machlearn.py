@@ -45,6 +45,3 @@ def trees_lens_test():
     trees.save_tree(lens_tree, filename)
 
     print(trees.load_tree(filename))
-
-
-trees_lens_test()

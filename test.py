@@ -4,6 +4,7 @@ import knn
 import trees
 import math
 import bayes
+import data
 
 
 class TestClassify(unittest.TestCase):
@@ -72,5 +73,20 @@ class TestClassify(unittest.TestCase):
         sample = 'edge case test'.split(' ')
         self.failUnless(bayes.get_vocabulary_vector(vocabulary, sample) == [])
 
+    def test_get_max_valued_key(self):
+        tally = {'two': 2, 'six': 6, 'one': 1, 'four': 4}
+        self.failUnless(data.get_most_common(tally) == 'six')
 
+    def test_train_naive_bayes(self):
+        factors = numpy.array([[1, 0], [1, 0], [0, 1], [1, 0], [0, 1]])
+        labels = ['A', 'A', 'B', 'B', 'C', ]
+
+        numerators, denominators, unique_labels = bayes.train_naive_bayes(factors, labels)
+        self.failUnless(set(unique_labels) == set(['A', 'B', 'C']))
+        self.failUnless(numpy.all(numerators[unique_labels.index('A')] == [2, 0]))
+        self.failUnless(numpy.all(numerators[unique_labels.index('B')] == [1, 1]))
+        self.failUnless(numpy.all(numerators[unique_labels.index('C')] == [0, 1]))
+        self.failUnless(numpy.all(denominators[unique_labels.index('A')] == 2))
+        self.failUnless(numpy.all(denominators[unique_labels.index('B')] == 2))
+        self.failUnless(numpy.all(denominators[unique_labels.index('C')] == 1))
 

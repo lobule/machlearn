@@ -1,5 +1,4 @@
 from numpy import *
-from pandas import Categorical
 from os import listdir
 
 import numpy as np
@@ -18,11 +17,13 @@ def create_dating_set():
 
     return factors, labels
 
+
 def create_contacts_set():
     reader = open("lenses.txt")
     matrix = [row.strip().split('\t') for row in reader.readlines()]
     labels = ['age', 'prescription', 'astigmatic', 'tear_rate']
     return matrix, labels
+
 
 def create_digit_vector(filename):
     reader = open(filename)
@@ -60,6 +61,16 @@ def normalize_cols(matrix):
     return normal_matrix, mins, ranges
 
 
+def get_most_common(tally):
+    max_count = -1
+    most_common_item = ""
+
+    for item, count in tally.items():
+        if count > max_count:
+            most_common_item = item
+            max_count = count
+
+    return most_common_item
 
 
 
