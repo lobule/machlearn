@@ -15,22 +15,21 @@ def get_vocabulary_vector(vocabulary, sample):
 
 
 def train_naive_bayes(factors, labels):
+    n = len(factors)
     num_factors = len(factors[0])
 
     unique_labels = list(set(labels))
     num_labels = len(unique_labels)
 
-    numerator = tile(0, (num_labels, num_factors))
+    numerators = tile(0, (num_labels, num_factors))
+    denominators = zeros(num_labels)
+    ps = zeros(num_labels)
 
-    denominator = zeros(num_labels)
-
-    for i in range(len(factors)):
+    for i in range(n):
         label_index = unique_labels.index(labels[i])
 
-        numerator[label_index] += factors[i]
-        denominator[label_index] += sum(factors[i])
+        numerators[label_index] += factors[i]
+        denominators[label_index] += sum(factors[i])
+        ps[label_index] += 1
 
-    return numerator, denominator, unique_labels
-
-
-
+    return numerators, denominators, ps / float(n), unique_labels

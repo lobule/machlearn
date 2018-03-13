@@ -81,12 +81,17 @@ class TestClassify(unittest.TestCase):
         factors = numpy.array([[1, 0], [1, 0], [0, 1], [1, 0], [0, 1]])
         labels = ['A', 'A', 'B', 'B', 'C', ]
 
-        numerators, denominators, unique_labels = bayes.train_naive_bayes(factors, labels)
+        numerators, denominators, ps, unique_labels = bayes.train_naive_bayes(factors, labels)
         self.failUnless(set(unique_labels) == set(['A', 'B', 'C']))
         self.failUnless(numpy.all(numerators[unique_labels.index('A')] == [2, 0]))
         self.failUnless(numpy.all(numerators[unique_labels.index('B')] == [1, 1]))
         self.failUnless(numpy.all(numerators[unique_labels.index('C')] == [0, 1]))
+
         self.failUnless(numpy.all(denominators[unique_labels.index('A')] == 2))
         self.failUnless(numpy.all(denominators[unique_labels.index('B')] == 2))
         self.failUnless(numpy.all(denominators[unique_labels.index('C')] == 1))
+
+        self.failUnless(ps[unique_labels.index('A')] == 0.4)
+        self.failUnless(ps[unique_labels.index('B')] == 0.4)
+        self.failUnless(ps[unique_labels.index('C')] == 0.2)
 
