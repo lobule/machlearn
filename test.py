@@ -1,5 +1,5 @@
 import unittest
-import numpy
+import numpy as np
 import knn
 import trees
 import math
@@ -9,7 +9,7 @@ import data
 
 class TestClassify(unittest.TestCase):
     def test_knn_classify(self):
-        factors = numpy.array([[1.0, 1.1], [1.0, 1.0], [0, 0], [0, 0.1], [-1, -1], [-0.5, -1.1]])
+        factors = np.array([[1.0, 1.1], [1.0, 1.0], [0, 0], [0, 0.1], [-1, -1], [-0.5, -1.1]])
         labels = ['A', 'A', 'B', 'B', 'C', 'C']
 
         prediction = knn.classify([1.1, 0.9], factors, labels, 3)
@@ -60,36 +60,52 @@ class TestClassify(unittest.TestCase):
         self.failUnless(set(vocabulary) == set(['this', 'is', 'not', 'actually', 'a', 'test']))
         self.failUnless(len(vocabulary) == 6)
 
-    def test_get_vocabulary_vector(self):
+    def test_get_vocabulary_set_vector(self):
         vocabulary = 'these are the words'.split(' ')
 
         sample = 'these are words'.split(' ')
-        self.failUnless(bayes.get_vocabulary_vector(vocabulary, sample) == [1, 1, 0, 1])
+        self.failUnless(bayes.get_vocabulary_set_vector(vocabulary, sample) == [1, 1, 0, 1])
 
         sample = 'these words may really be words'.split(' ')
-        self.failUnless(bayes.get_vocabulary_vector(vocabulary, sample) == [1, 0, 0, 1])
+        self.failUnless(bayes.get_vocabulary_set_vector(vocabulary, sample) == [1, 0, 0, 1])
 
         vocabulary = []
         sample = 'edge case test'.split(' ')
-        self.failUnless(bayes.get_vocabulary_vector(vocabulary, sample) == [])
+        self.failUnless(bayes.get_vocabulary_set_vector(vocabulary, sample) == [])
+
+    def test_get_vocabulary_bag_vector(self):
+        vocabulary = 'these are the words'.split(' ')
+
+        sample = 'these are words'.split(' ')
+        self.failUnless(np.all(bayes.get_vocabulary_bag_vector(vocabulary, sample) == [1, 1, 0, 1]))
+
+        sample = 'these words are words but not the words'.split(' ')
+        self.failUnless(np.all(bayes.get_vocabulary_bag_vector(vocabulary, sample) == [1, 1, 1, 3]))
+
+        vocabulary = []
+        sample = 'edge case test'.split(' ')
+        self.failUnless(np.all(bayes.get_vocabulary_bag_vector(vocabulary, sample) == []))
 
     def test_get_max_valued_key(self):
         tally = {'two': 2, 'six': 6, 'one': 1, 'four': 4}
         self.failUnless(data.get_most_common(tally) == 'six')
 
     def test_train_naive_bayes(self):
-        factors = numpy.array([[1, 0], [1, 0], [0, 1], [1, 0], [0, 1]])
+        factors = np.array([[1, 0], [1, 0], [0, 1], [1, 0], [0, 1]])
         labels = ['A', 'A', 'B', 'B', 'C', ]
 
         numerators, denominators, ps, unique_labels = bayes.train_naive_bayes(factors, labels)
-        self.failUnless(set(unique_labels) == set(['A', 'B', 'C']))
-        self.failUnless(numpy.all(numerators[unique_labels.index('A')] == [2, 0]))
-        self.failUnless(numpy.all(numerators[unique_labels.index('B')] == [1, 1]))
-        self.failUnless(numpy.all(numerators[unique_labels.index('C')] == [0, 1]))
 
-        self.failUnless(numpy.all(denominators[unique_labels.index('A')] == 2))
-        self.failUnless(numpy.all(denominators[unique_labels.index('B')] == 2))
-        self.failUnless(numpy.all(denominators[unique_labels.index('C')] == 1))
+        print(bayes.classify([1, 1], numerators, denominators, ps, unique_labels))
+
+        self.failUnless(set(unique_labels) == set(['A', 'B', 'C']))
+        self.failUnless(np.all(numerators[unique_labels.index('A')] == [2, 0]))
+        self.failUnless(np.all(numerators[unique_labels.index('B')] == [1, 1]))
+        self.failUnless(np.all(numerators[unique_labels.index('C')] == [0, 1]))
+
+        self.failUnless(np.all(denominators[unique_labels.index('A')] == 2))
+        self.failUnless(np.all(denominators[unique_labels.index('B')] == 2))
+        self.failUnless(np.all(denominators[unique_labels.index('C')] == 1))
 
         self.failUnless(ps[unique_labels.index('A')] == 0.4)
         self.failUnless(ps[unique_labels.index('B')] == 0.4)
