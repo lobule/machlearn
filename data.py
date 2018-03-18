@@ -1,5 +1,5 @@
-from numpy import *
 from os import listdir
+import re
 
 import numpy as np
 
@@ -71,6 +71,12 @@ def get_most_common(tally):
             max_count = count
 
     return most_common_item
+
+def parse_to_word_list(text):
+    regex = re.compile(r'\W*')
+    return [words for words in regex.split(str.lower(text)) if len(words) > 0]
+
+
 
 
 
