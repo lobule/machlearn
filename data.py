@@ -1,7 +1,8 @@
 from os import listdir
-import re
-
 import numpy as np
+
+
+# Create data
 
 
 def create_dating_set():
@@ -30,7 +31,7 @@ def create_digit_vector(filename):
     content = reader.readlines()
     vector = []
     for line in content:
-        vector += [int(i) for i in line[0:-1]]
+        vector += [int(i) for i in line[0:-1].strip()]
     return vector
 
 
@@ -48,40 +49,3 @@ def create_digit_matrix(folder_name):
     digit_matrix = np.array(digit_matrix)
 
     return digit_matrix, labels_vector
-
-
-def normalize_cols(matrix):
-    mins = matrix.min(0)
-    maxes = matrix.max(0)
-    ranges = maxes - mins
-
-    rows = matrix.shape[0]
-    normal_matrix = (matrix - tile(mins, (rows, 1))) / tile(ranges, (rows, 1))
-
-    return normal_matrix, mins, ranges
-
-
-def get_most_common(tally):
-    max_count = -1
-    most_common_item = ""
-
-    for item, count in tally.items():
-        if count > max_count:
-            most_common_item = item
-            max_count = count
-
-    return most_common_item
-
-def parse_to_word_list(text):
-    regex = re.compile(r'\W*')
-    return [words for words in regex.split(str.lower(text)) if len(words) > 0]
-
-
-
-
-
-
-
-
-
-

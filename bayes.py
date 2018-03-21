@@ -1,4 +1,5 @@
 import numpy as np
+import re
 
 
 def get_token_set(corpus):
@@ -22,6 +23,21 @@ def get_vocabulary_bag_vector(vocabulary, sample):
             vector[vocabulary.index(word)] += 1
     return vector
 
+
+def parse_to_word_list(text):
+    regex = re.compile(r'\W*')
+    return [words for words in regex.split(str.lower(text)) if len(words) > 0]
+
+
+def file_to_word_list(filename):
+    return parse_to_word_list(open(filename).read())
+
+
+def folder_to_document_list(folder_name):
+    documents = []
+    for filename in listdir(folder_name):
+        documents.append(file_to_word_list(folder_name + '/' + filename))
+    return documents
 
 def train_naive_bayes(factors, labels):
     n = len(factors)
